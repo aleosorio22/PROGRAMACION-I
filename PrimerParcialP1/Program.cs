@@ -1,6 +1,4 @@
-﻿using static System.Runtime.InteropServices.JavaScript.JSType;
-
-Main();
+﻿Main();
 static void Main()
 {
     Menu();
