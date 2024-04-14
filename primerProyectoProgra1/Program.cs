@@ -1,14 +1,13 @@
-﻿//List<(int, int)> obstaculosMoviles = new List<(int, int)>();
-
+﻿
 Inicio();
-//static int vidas = 3
-static void Inicio()
+bool[,] posicionesVisitadas;
+
+
+void Inicio()
 {
-    int vidas = 3;
 
-    bool[,] posicionesVisitadas = null;
+    posicionesVisitadas = null;
     bool salir = false;
-
 
     while (!salir)
     {
@@ -34,7 +33,7 @@ static void MostrarMenuInicio()
     {
         case 1:
             Console.WriteLine("¡Iniciando un nuevo juego!");
-            IniciarJuego(3);
+            IniciarJuego();
             break;
         case 2:
             Console.WriteLine("Cargando partida guardada...");
@@ -70,11 +69,13 @@ static void MostrarInstrucciones()
     Console.WriteLine("Evite regresar a posiciones previamente visitadas y encuentre la salida del laberinto.");
 }
 
-static void IniciarJuego(int vidas)
+static void IniciarJuego()
 {
     // Definir el tamaño del laberinto
     int filas = 10;
     int columnas = 20;
+
+    Console.WriteLine($"Tamaño del laberinto: {filas} filas x {columnas} columnas");
 
     // Inicializar la matriz de posiciones visitadas
     bool[,] posicionesVisitadas = new bool[filas, columnas];
@@ -87,6 +88,8 @@ static void IniciarJuego(int vidas)
     int jugadorX = 0;
     int jugadorY = 0;
 
+    Console.WriteLine($"Posición inicial del jugador: ({jugadorX}, {jugadorY})");
+
     // Variable para controlar si el jugador ha encontrado la salida
     bool salidaEncontrada = false;
 
@@ -98,6 +101,8 @@ static void IniciarJuego(int vidas)
 
         // Calcular rutas de los enemigos hacia el jugador utilizando Dijkstra
         Dictionary<(int, int), List<(int, int)>> rutasEnemigos = CalcularRutasEnemigos(filas, columnas, enemigos, (jugadorX, jugadorY));
+
+        Console.WriteLine("Posiciones de los enemigos:");
 
         // Mover enemigos
         for (int i = 0; i < enemigos.Count; i++)
@@ -117,29 +122,21 @@ static void IniciarJuego(int vidas)
                 {
                     Console.WriteLine("¡El enemigo ha alcanzado al jugador!");
 
-                    // Reducir una vida cuando el enemigo alcanza al jugador
-                    vidas--;
-
-                    Console.WriteLine("Vidas restantes: " + vidas);
-
-                    // Eliminar al enemigo que alcanzó al jugador
                     enemigos.RemoveAt(i);
 
-                    // Verificar si el jugador todavía tiene vidas
-                    if (vidas <= 0)
-                    {
-                        Console.WriteLine("¡El enemigo te ha alcanzado! Game Over.");
-                        return;
-                    }
+                    Console.WriteLine("El jugador ha sido alcanzado por un enemigo.");
+                    Console.ReadLine();
+
                 }
 
             }
+            Console.WriteLine($"({enemigo.Item1}, {enemigo.Item2})");
         }
 
 
 
         // Mostrar el laberinto y la posición actual del jugador
-        MostrarLaberinto(laberinto, jugadorX, jugadorY, obstaculosMoviles, enemigos, vidas);
+        MostrarLaberinto(laberinto, jugadorX, jugadorY, obstaculosMoviles, enemigos, posicionesVisitadas);
         // Marcar la posición actual del jugador como visitada
         posicionesVisitadas[jugadorX, jugadorY] = true;
 
@@ -258,10 +255,9 @@ static List<(int, int)> GenerarEnemigos(int filas, int columnas, int cantidad)
     return enemigos;
 }
 
-static void MostrarLaberinto(char[,] laberinto, int jugadorX, int jugadorY, List<(int, int)> obstaculosMoviles, List<(int, int)> enemigos, int vidas)
+static void MostrarLaberinto(char[,] laberinto, int jugadorX, int jugadorY, List<(int, int)> obstaculosMoviles, List<(int, int)> enemigos, bool[,] posicionesVisitadas)
 {
     Console.Clear();
-    MostrarBarraEstado(vidas);
     for (int i = 0; i < laberinto.GetLength(0); i++)
     {
         for (int j = 0; j < laberinto.GetLength(1); j++)
@@ -278,6 +274,10 @@ static void MostrarLaberinto(char[,] laberinto, int jugadorX, int jugadorY, List
             {
                 Console.Write("E"); // Símbolo para representar un enemigo
             }
+            else if (posicionesVisitadas[i, j])
+            {
+                Console.Write(" "); // Espacio en blanco para posiciones visitadas
+            }
             else
             {
                 Console.Write(laberinto[i, j]);
@@ -285,11 +285,14 @@ static void MostrarLaberinto(char[,] laberinto, int jugadorX, int jugadorY, List
         }
         Console.WriteLine();
     }
+    Console.WriteLine($"Posición del jugador: ({jugadorX}, {jugadorY})");
+    Console.WriteLine("Posiciones de los enemigos:");
+    foreach (var enemigo in enemigos)
+    {
+        Console.WriteLine($"- ({enemigo.Item1}, {enemigo.Item2})");
+    }
 }
-static void MostrarBarraEstado(int vidas)
-{
-    Console.WriteLine("Vidas: " + new string('|', vidas));
-}
+
 
 
 static Dictionary<(int, int), List<(int, int)>> CalcularRutasEnemigos(int filas, int columnas, List<(int, int)> enemigos, (int, int) jugadorPosicion)

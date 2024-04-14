@@ -28,7 +28,7 @@ namespace WFcarro
 
         private void btnAcelerar_Click(object sender, EventArgs e)
         {
-            kph.Text = "Velocidad = "+ carr.Acelerar();
+            kph.Text = "Velocidad = " + carr.Acelerar();
         }
     }
 }

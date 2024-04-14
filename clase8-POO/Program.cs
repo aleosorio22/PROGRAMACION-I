@@ -1,5 +1,9 @@
 ﻿using clase8_POO.Clases;
 
+
+
+
+Carro runrun = new Carro("toyota", 2023);
 Carro carrito = new Carro("toyota", 2021);
 Carro car2 = new Carro("Nissan",2023 );
 
