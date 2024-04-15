@@ -33,7 +33,7 @@ public class Program
         Inicio();
     }
 
-    
+
 
     static void Inicio()
     {
@@ -117,12 +117,11 @@ public class Program
 
     static void ContinuarJuego(GameState estado)
     {
-
         vidas = estado.Vidas;
         jugadorX = estado.JugadorX;
         jugadorY = estado.JugadorY;
         posicionesVisitadas = estado.PosicionesVisitadas;
-    
+
     }
 
     static void FinalizarJuego()
@@ -162,9 +161,7 @@ public class Program
 
         Console.WriteLine($"Tamaño del laberinto: {filas} filas x {columnas} columnas");
 
-        //bool[,] posicionesVisitadas = new bool[filas, columnas];
-
-        // Crear el laberinto representado como una matriz de caracteres
+        // Crear el laberinto representado como una matriz
         char[,] laberinto = GenerarLaberinto(filas, columnas);
         List<(int, int)> obstaculosMoviles = GenerarObstaculosMoviles(filas, columnas, 15);
         List<(int, int)> enemigos = GenerarEnemigos(filas, columnas, 10);
@@ -177,7 +174,6 @@ public class Program
 
         Console.WriteLine($"Posición inicial del jugador: ({jugadorX}, {jugadorY})");
 
-        // Variable para controlar si el jugador ha encontrado la salida
         bool salidaEncontrada = false;
 
         // Bucle principal del juego
@@ -185,7 +181,7 @@ public class Program
         {
             obstaculosMoviles = MoverObstaculosMoviles(filas, columnas, obstaculosMoviles);
 
-            // Calcular rutas de los enemigos hacia el jugador utilizando Dijkstra
+            // Calcular rutas con Dijkstra
             Dictionary<(int, int), List<(int, int)>> rutasEnemigos = CalcularRutasEnemigos(filas, columnas, enemigos, (jugadorX, jugadorY));
 
             Console.WriteLine("Posiciones de los enemigos:");
@@ -196,28 +192,28 @@ public class Program
                 var enemigo = enemigos[i];
                 if (rutasEnemigos.ContainsKey(enemigo) && rutasEnemigos[enemigo].Count > 0)
                 {
-                    
+
                     var siguientePaso = rutasEnemigos[enemigo][0];
-                    
+
                     enemigos[i] = siguientePaso;
-                  
+
                     rutasEnemigos[enemigo].RemoveAt(0);
 
                 }
                 Console.WriteLine($"({enemigo.Item1}, {enemigo.Item2})");
             }
 
-           
+
             MostrarLaberinto(laberinto, jugadorX, jugadorY, obstaculosMoviles, enemigos, posicionesVisitadas);
             posicionesVisitadas[jugadorX, jugadorY] = true;
 
-   
-            ConsoleKeyInfo tecla = Console.ReadKey(true); // Cambiado a true para no mostrar la entrada en la consola
+
+            ConsoleKeyInfo tecla = Console.ReadKey(true);
 
             if (tecla.Key == teclaSalida)
             {
                 FinalizarJuego();
-                break; // Salir del bucle principal del juego
+                break;
             }
 
             switch (tecla.Key)
@@ -258,10 +254,9 @@ public class Program
 
     static char[,] GenerarLaberinto(int filas, int columnas)
     {
-        // Crear una matriz para representar el laberinto
+
         char[,] laberinto = new char[filas, columnas];
 
-        // Llenar el laberinto con caracteres de ejemplo
         for (int i = 0; i < filas; i++)
         {
             for (int j = 0; j < columnas; j++)
@@ -283,8 +278,8 @@ public class Program
 
         foreach (var obstaculo in obstaculosMoviles)
         {
-            int newX = obstaculo.Item1 + rnd.Next(-1, 2); 
-            int newY = obstaculo.Item2 + rnd.Next(-1, 2); 
+            int newX = obstaculo.Item1 + rnd.Next(-1, 2);
+            int newY = obstaculo.Item2 + rnd.Next(-1, 2);
 
             if (newX >= 0 && newX < filas && newY >= 0 && newY < columnas)
             {
@@ -338,15 +333,15 @@ public class Program
             {
                 if (i == jugadorX && j == jugadorY)
                 {
-                    Console.Write("☺"); 
+                    Console.Write("☺");
                 }
                 else if (obstaculosMoviles.Contains((i, j)))
                 {
-                    Console.Write("X"); 
+                    Console.Write("X");
                 }
                 else if (enemigos.Contains((i, j)))
                 {
-                    Console.Write("E"); 
+                    Console.Write("E");
                 }
                 else if (posicionesVisitadas[i, j])
                 {
@@ -366,7 +361,7 @@ public class Program
         {
             var enemigo = enemigos[k];
             Console.WriteLine($"({enemigo.Item1}, {enemigo.Item2})");
-           
+
             if (jugadorX == enemigo.Item1 && jugadorY == enemigo.Item2)
             {
                 Console.WriteLine("¡El enemigo ha alcanzado al jugador!");
@@ -389,6 +384,7 @@ public class Program
 
     static Dictionary<(int, int), List<(int, int)>> CalcularRutasEnemigos(int filas, int columnas, List<(int, int)> enemigos, (int, int) jugadorPosicion)
     {
+        // Diccionario para almacenar las rutas de los enemigos
         Dictionary<(int, int), List<(int, int)>> rutasEnemigos = new Dictionary<(int, int), List<(int, int)>>();
 
         foreach (var enemigo in enemigos)
@@ -396,6 +392,7 @@ public class Program
             // Verificar si la clave ya existe en el diccionario
             if (!rutasEnemigos.ContainsKey(enemigo))
             {
+                // Calcular la ruta utilizando el algoritmo de Dijkstra
                 List<(int, int)> ruta = Dijkstra(filas, columnas, enemigo, jugadorPosicion);
                 rutasEnemigos.Add(enemigo, ruta);
             }
@@ -407,10 +404,14 @@ public class Program
 
     static List<(int, int)> Dijkstra(int filas, int columnas, (int, int) inicio, (int, int) fin)
     {
+        // Matriz para almacenar las distancias desde el nodo de inicio
         int[,] distancias = new int[filas, columnas];
+        // Matriz para verificar si un nodo ha sido visitado
         bool[,] visitado = new bool[filas, columnas];
+        // Matriz para almacenar los nodos padres en la ruta más corta
         (int, int)[,] padres = new (int, int)[filas, columnas];
 
+        // Inicializar todas las distancias como infinito
         for (int i = 0; i < filas; i++)
         {
             for (int j = 0; j < columnas; j++)
@@ -419,10 +420,13 @@ public class Program
             }
         }
 
+        // La distancia al nodo de inicio es 0
         distancias[inicio.Item1, inicio.Item2] = 0;
 
+        // Bucle principal de Dijkstra
         while (true)
         {
+            // Encontrar el nodo no visitado con la distancia mínima
             (int, int) u = (-1, -1);
             int minDistancia = int.MaxValue;
 
@@ -437,31 +441,40 @@ public class Program
                     }
                 }
             }
-
+            // Si no se encontró ningún nodo válido, salir del bucle
             if (u == (-1, -1))
                 break;
 
+            // Marcar el nodo como visitado
             visitado[u.Item1, u.Item2] = true;
 
+            // Si el nodo actual es el nodo de destino, salir del bucle
             if (u == fin)
                 break;
 
+            // Explorar los nodos adyacentes
             for (int dx = -1; dx <= 1; dx++)
             {
                 for (int dy = -1; dy <= 1; dy++)
                 {
+                    // Ignorar movimientos diagonales
                     if (dx != 0 && dy != 0)
                         continue;
 
+                    // Calcular las coordenadas del nodo adyacente
                     int x = u.Item1 + dx;
                     int y = u.Item2 + dy;
 
+                    // Verificar si el nodo adyacente está dentro de los límites y no ha sido visitado
                     if (x < 0 || x >= filas || y < 0 || y >= columnas || visitado[x, y])
                         continue;
 
+                    // Calcular la distancia tentativa desde el nodo de inicio
                     int distanciaActualizada = distancias[u.Item1, u.Item2] + 1;
 
+                    // Si la distancia tentativa es menor que la distancia almacenada, actualizar la distancia y el nodo padre
                     if (distanciaActualizada < distancias[x, y])
+                        if (distanciaActualizada < distancias[x, y])
                     {
                         distancias[x, y] = distanciaActualizada;
                         padres[x, y] = u;
@@ -469,6 +482,8 @@ public class Program
                 }
             }
         }
+
+        // Reconstruir la ruta óptima desde el nodo de inicio hasta el nodo de destino2
 
         List<(int, int)> ruta = new List<(int, int)>();
 
