@@ -46,6 +46,7 @@
             this.btnObtenerTodos = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.btnSiguiente = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.txtGen)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -223,11 +224,22 @@
             this.btnSiguiente.UseVisualStyleBackColor = true;
             this.btnSiguiente.Click += new System.EventHandler(this.btnSiguiente_Click);
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Arial Rounded MT Bold", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(100, 31);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(981, 46);
+            this.label2.TabIndex = 17;
+            this.label2.Text = "Rene Alejandro Osorio Gonzalez (0905-23-10736)";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1226, 734);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.btnSiguiente);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.btnObtenerTodos);
@@ -241,6 +253,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -264,6 +277,7 @@
         private System.Windows.Forms.Button btnObtenerTodos;
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Button btnSiguiente;
+        private System.Windows.Forms.Label label2;
     }
 }
 
