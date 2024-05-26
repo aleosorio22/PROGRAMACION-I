@@ -124,6 +124,7 @@ namespace databaseWFP1A.data.DataAccess
             }
         }
 
+
         //Busca un personaje por su ID
         public DataTable BuscarPersonajePorId(int id)
         {
@@ -190,6 +191,15 @@ namespace databaseWFP1A.data.DataAccess
                 }
             }
         }
+
+//        MySqlConnection
+//MySqlCommand
+//command.Parameters.AddWithValue
+//@param
+//ExecuteNonQuery
+//MySqlDataAdapter
+//adapter.Fill(personajes)
+
 
     }
 }
